@@ -36,3 +36,4 @@ void contains_straight(Hand* card_hands);
 void display_menu(void);
 void print_rule();
 void display_continue();
+int play(Hand* card_hands);

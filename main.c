@@ -1,6 +1,7 @@
 #include "Header.h"
 //1. Please finish the showdown functionality by sending the two pointers of the player hands--alloted time: 30 minutes/one cycle
 //   -- create a point system to see who wins i.e., every type will have a point based on the the order 
+//			- if both have the same point then possibly make a showdown happen that is shuffle then deal by letting the players now and so you wouldn't tell them who won but instead suggest for them to play again
 //2. Please finish the random generator of the dealer hand drawing mechanism--alloted time: 45 minutes/one and a half cycle
 int main(void)
 {	
@@ -112,7 +113,15 @@ int main(void)
 		for (int i = 0; i < 5; i++) {
 			printf("\nCards:%s of %s, \n", face[card_hands_player1.cards[i].face_index], suit[card_hands_player1.cards[i].suit_index]);
 		}
+		
+		int player1_score;
+		int dealer_score;
+		player1_score =play(&card_hands_player1);
+		dealer_score = play(&card_hands_dealer);
 
+		if (player1_score > dealer_score)printf("Player1 has won this round. Congratulations");
+		if (player1_score < dealer_score)printf("The Dealer has won this round. Good job, computer");
+		else printf("Time for a showdown! Since neither has won.");
 
 		
 		

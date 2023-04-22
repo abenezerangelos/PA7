@@ -310,7 +310,6 @@ void contains_straight(Hand* card_hands) {
 	
 	int sorter[5] = { 5,4,3,2,1 };
 	int smallest = 0;
-	int sorted;
 	for (int j = 0; j < 5; j++) {
 		sorter[j] = card_hands->cards[j].face_index;
 	}
@@ -361,4 +360,21 @@ void display_continue(void) {
 	printf("1. Enter '1' to exit the game.\n"
 		"2. Enter '2' to continue playing.\n");
 }
-int play()
+int play(Hand* card_hands) {
+	int total_score = 0;
+	contains_pair(card_hands);
+	contains_two_pairs(card_hands);
+	contains_three_of_a_kind(card_hands);
+	contains_straight(card_hands);
+	contains_flush(card_hands);
+	contains_full_house(card_hands);
+
+	int points_array[7] = { card_hands->pair,card_hands->two_pair,card_hands->three_kinds,card_hands->straight,card_hands->flush,card_hands->full_house,card_hands->four_kinds };
+	for (int i = 0; i < sizeof(points_array) / 4; i++) {
+		printf("Points: %d", points_array[i]);
+		if (points_array[i] == 1)total_score += (i+1);
+	}
+	return total_score;
+
+
+}
