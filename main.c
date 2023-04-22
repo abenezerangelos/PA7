@@ -119,9 +119,9 @@ int main(void)
 		player1_score =play(&card_hands_player1);
 		dealer_score = play(&card_hands_dealer);
 
-		if (player1_score > dealer_score)printf("Player1 has won this round. Congratulations");
-		if (player1_score < dealer_score)printf("The Dealer has won this round. Good job, computer");
-		else printf("Time for a showdown! Since neither has won.");
+		if (player1_score > dealer_score)printf("Player1 has won this round. Congratulations\n");
+		if (player1_score < dealer_score)printf("The Dealer has won this round. Good job, computer\n");
+		else printf("Time for a showdown! Since neither has won.\n");
 
 		
 		

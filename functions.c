@@ -202,97 +202,106 @@ int sequence_count = 0, seeker = 0;
 void contains_pair(Hand* card_hands) {
 	int i;
 	int count = 0;
-	for (int j=0; j<4;j++)
-		for (i = j+1; i < 5; i++) {
-			if ((card_hands->cards[j].face_index==card_hands->cards[i].face_index)){
-				
+	for (int j = 0; j < 4; j++) {
+		for (i = j + 1; i < 5; i++) {
+			if ((card_hands->cards[j].face_index == card_hands->cards[i].face_index)) {
+
 				if (!count)card_hands->pair = 1;
 				else card_hands->pair = 0;
 				count++;
-				
+
 			}
 		}
+	}
 
 }
 void contains_two_pairs(Hand* card_hands) {
 	int i;
 	int face_count = 0;
-	int suit_count = 0;
+	
 	int first_pair = 0;
 	int second_pair = 0;
-	for (int j = 0; j < 4; j++)
+	for (int j = 0; j < 4; j++) {
 		for (i = j + 1; i < 5; i++) {
-			
-			if ((card_hands->cards[j].face_index == card_hands->cards[i].face_index)){
-				if(!face_count)first_pair = card_hands->cards[i].face_index;
-				else if (face_count == 1)second_pair = card_hands->cards[i].face_index;
+			printf("Change: %d for two pairs player%d\n", card_hands->two_pair, card_hands->identifier + 1);
+			if ((card_hands->cards[j].face_index == card_hands->cards[i].face_index)) {
+				if (!face_count)first_pair = card_hands->cards[j].face_index;
+				else if (face_count)second_pair = card_hands->cards[j].face_index;
 				if (first_pair != second_pair)card_hands->two_pair = 1;
 				else card_hands->two_pair = 0;
+				//iffy
 				if (face_count > 1)card_hands->two_pair = 0;
 				face_count++;
-				
+
 
 			}
 		}
-
+	}
 }
 void contains_three_of_a_kind(Hand* card_hands) {
 	int i;
-	int face_count = 0;
-	int suit_count = 0;
+	int similarity_counter = 0;
 	int first_pair = 0;
 	int comparer = 0;
-	for (int j = 0; j < 4; j++)
+	int counter = 0;
+	for (int j = 0; j < 4; j++) {
 		for (i = j + 1; i < 5; i++) {
 			if (card_hands->cards[j].face_index == card_hands->cards[i].face_index) {
-				if (!face_count)first_pair = card_hands->cards[i].face_index;
-				else if (face_count)comparer = card_hands->cards[i].face_index;
+				if (!similarity_counter)first_pair = card_hands->cards[j].face_index;
+				else if (similarity_counter)comparer = card_hands->cards[j].face_index;
 				//this line is very iffy; it is completely dependent upon the initialization of our struct, unless we initialize each of the poker hand rankings to zero we have to make the if comparison
 				//to some other integer, another integer like -1 but again that is if we set it.
-				if (first_pair == comparer && face_count < 3) {
-					if (card_hands->three_kinds)card_hands->three_kinds = 1; }
-				else if (first_pair!=comparer&&face_count<3) card_hands->three_kinds = 0;
-				if (face_count > 2)card_hands->three_kinds = 0;
-				face_count++;
+
+				//we aren't supposed to be looking for three pairs just three of the same type of cards, we are not supposed to set this to zero instead we are supposed to increase it and see if it reaches to 3 with the first pair
+				if (first_pair == comparer) {
+					counter++;
+				}
+				if (counter == 2)card_hands->three_kinds = 1;
+				if (counter != 2)card_hands->three_kinds = 0;
+				similarity_counter++;
 
 			}
-			
+
 		}
+	}
 
 }
 void contains_four_of_a_kind(Hand* card_hands) {
 	int i;
-	int face_count = 0;
+	int similarity_counter = 0;
 	int suit_count = 0;
 	int first_pair = 0;
 	int comparer = 0;
-	for (int j = 0; j < 4; j++)
+	int counter = 0;
+	for (int j = 0; j < 4; j++) {
 		for (i = j + 1; i < 5; i++) {
 			if (card_hands->cards[j].face_index == card_hands->cards[i].face_index) {
-				if (!face_count)first_pair = card_hands->cards[i].face_index;
-				else if (face_count)comparer = card_hands->cards[i].face_index;
+				if (!similarity_counter)first_pair = card_hands->cards[i].face_index;
+				else if (similarity_counter)comparer = card_hands->cards[i].face_index;
 				//this line is very iffy; it is completely dependent upon the initialization of our struct, unless we initialize each of the poker hand rankings to zero we have to make the if comparison
 				//to some other integer, another integer like -1 but again that is if we set it.
-				if (first_pair == comparer && face_count < 4) {
-					if (card_hands->three_kinds)card_hands->three_kinds = 1;
+				if (first_pair == comparer) {
+					counter++;
 				}
-				else if (first_pair != comparer && face_count < 4) card_hands->three_kinds = 0;
-				if (face_count > 3)card_hands->three_kinds = 0;
-				face_count++;
+				if (counter == 3)card_hands->three_kinds = 1;
+				if (counter != 3)card_hands->three_kinds = 0;
+				similarity_counter++;
 
 			}
 		}
+	}
 
 }
 void contains_full_house(Hand* card_hands) {
 	int i;
-	for (int j = 0; j < 4; j++)
+	for (int j = 0; j < 4; j++) {
 		for (i = j + 1; i < 5; i++) {
-			if(card_hands->three_kinds==1&&card_hands->pair==1){
+			if (card_hands->three_kinds == 1 && card_hands->pair == 1) {
 				card_hands->full_house = 1;
 
 			}
 		}
+	}
 
 }
 void contains_flush(Hand* card_hands) {
@@ -371,9 +380,13 @@ int play(Hand* card_hands) {
 
 	int points_array[7] = { card_hands->pair,card_hands->two_pair,card_hands->three_kinds,card_hands->straight,card_hands->flush,card_hands->full_house,card_hands->four_kinds };
 	for (int i = 0; i < sizeof(points_array) / 4; i++) {
-		printf("Points: %d", points_array[i]);
-		if (points_array[i] == 1)total_score += (i+1);
+		
+		if (points_array[i] == 1) {
+			total_score += (i + 1);
+			printf("Points for player%d: %d\n", card_hands->identifier + 1, i+1);
+		}
 	}
+	printf("Total for player%d: %d\n", card_hands->identifier + 1, total_score);
 	return total_score;
 
 
