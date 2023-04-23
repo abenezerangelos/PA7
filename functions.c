@@ -14,6 +14,8 @@
 //This ^^^^^^^^^^^ is the hardest part of the PA. 
 /* shuffle cards in deck */
 
+//Fix the problem of the existence of k and a in straight counting--alloted time: 15 min
+
 void shuffle(int wDeck[4][13])
 {	
 	
@@ -218,25 +220,33 @@ void contains_pair(Hand* card_hands) {
 void contains_two_pairs(Hand* card_hands) {
 	int i;
 	int face_count = 0;
+	int save_combo[5];
+	int iterator;
+	//initialize save combo array
+	for (int i = 0; i < sizeof(save_combo) / 4; i++) {
+		save_combo[i] = -1;
+	}
 	
-	int first_pair = 0;
-	int second_pair = 0;
 	for (int j = 0; j < 4; j++) {
 		for (i = j + 1; i < 5; i++) {
 			printf("Change: %d for two pairs player%d\n", card_hands->two_pair, card_hands->identifier + 1);
 			if ((card_hands->cards[j].face_index == card_hands->cards[i].face_index)) {
-				if (!face_count)first_pair = card_hands->cards[j].face_index;
-				else if (face_count)second_pair = card_hands->cards[j].face_index;
-				if (first_pair != second_pair)card_hands->two_pair = 1;
-				else card_hands->two_pair = 0;
-				//iffy
-				if (face_count > 1)card_hands->two_pair = 0;
-				face_count++;
-
-
+				save_combo[j] = card_hands->cards[i].face_index;
 			}
 		}
 	}
+	int size = sizeof(save_combo) / 4;
+	printf("[");
+	for (int iter = 0; iter <size-1 ; iter++) {
+		printf("%d, ", save_combo[iter]);
+		for (iterator = iter + 1; iterator < size; iterator++) {
+			if (save_combo[iter] != -1&&save_combo[iterator]!=-1) {
+				if (save_combo[iter] == save_combo[iterator])card_hands->two_pair = 0;
+				else if (save_combo[iter] != save_combo[iterator])card_hands->two_pair = 1;
+			}
+		}
+	}
+	printf("]\n");
 }
 void contains_three_of_a_kind(Hand* card_hands) {
 	int i;
@@ -315,12 +325,45 @@ void contains_flush(Hand* card_hands) {
 		}
 
 }
+void sort(Hand* card_hands) {
+	int smallest = 0;
+	int sorter[5] = { 5,4,3,2,1 };
+	for (int j = 0; j < 5; j++) {
+		sorter[j] = card_hands->cards[j].face_index;
+	}
+	for (int j = 0; j < 5; j++) {
+		int min = INT_MAX;
+		for (int i = j; i < 5; i++) {
+			if (sorter[i] < min) {
+				min = sorter[i];
+				smallest = i;
+			}
+		}
+		//swap
+		sorter[smallest] = sorter[j];
+		sorter[j] = min;
+	}
+}
 void contains_straight(Hand* card_hands) {
 	
 	int sorter[5] = { 5,4,3,2,1 };
 	int smallest = 0;
+	int contains_both = -1;
+	int k_exists = 0;
+	int ace_exists = 0;
+	//rearranging it properly if it contains both a king and an ace in the same hand
+	for (int i = 0; i < 5; i++) {
+		if (card_hands->cards[i].face_index == 0)k_exists = 1;
+		if (card_hands->cards[i].face_index == 12)ace_exists = 1;
+		if (k_exists && ace_exists)contains_both = 1;
+	}
+	//rearranging it properly if it contains both a king and an ace in the same hand
 	for (int j = 0; j < 5; j++) {
-		sorter[j] = card_hands->cards[j].face_index;
+	
+		if (contains_both == 1 && card_hands->cards[j].face_index >= 10) {
+			sorter[j] = card_hands->cards[j].face_index-13;
+		}
+		else sorter[j] = card_hands->cards[j].face_index;
 	}
 	for (int j = 0; j < 5; j++) {
 		int min = INT_MAX;
@@ -338,7 +381,7 @@ void contains_straight(Hand* card_hands) {
 	for (int i = 0; i < 4; i++) {
 		if ((sorter[i] + 1) == sorter[i + 1] ) {
 			
-			if (card_hands->straight)card_hands->straight = 2;
+			if (card_hands->straight)card_hands->straight = 1;
 			
 			
 		}
@@ -346,7 +389,7 @@ void contains_straight(Hand* card_hands) {
 		printf("Debugger for player%d:%d\n", card_hands->identifier + 1, card_hands->straight);
 	}
 	
-	if (card_hands->straight == 2) {
+	if (card_hands->straight == 1) {
 		printf("The hand of the player is straight congrats!\n");
 	}
 	
@@ -377,13 +420,12 @@ int play(Hand* card_hands) {
 	contains_straight(card_hands);
 	contains_flush(card_hands);
 	contains_full_house(card_hands);
-
+	char* rep[7] = { "pair","two pair","three kinds","straight","flush","full_house","four_kinds" };
 	int points_array[7] = { card_hands->pair,card_hands->two_pair,card_hands->three_kinds,card_hands->straight,card_hands->flush,card_hands->full_house,card_hands->four_kinds };
 	for (int i = 0; i < sizeof(points_array) / 4; i++) {
-		
 		if (points_array[i] == 1) {
 			total_score += (i + 1);
-			printf("Points for player%d: %d\n", card_hands->identifier + 1, i+1);
+			printf("Points for player%d: %d and which one it is: %s, truthvalue:%d\n", card_hands->identifier + 1, i+1,rep[i],card_hands->pair);
 		}
 	}
 	printf("Total for player%d: %d\n", card_hands->identifier + 1, total_score);

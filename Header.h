@@ -37,3 +37,4 @@ void display_menu(void);
 void print_rule();
 void display_continue();
 int play(Hand* card_hands);
+void sort(Hand* card_hands);

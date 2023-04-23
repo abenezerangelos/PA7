@@ -12,25 +12,7 @@ int main(void)
 	const char* face[13] = { "Ace", "Deuce", "Three", "Four", "Five", "Six", "Seven", "Eight",
 		"Nine", "Ten", "Jack", "Queen", "King" };
 	//initialize card struct for each array and pass pointer into our deal function
-	Hand card_hands_player1;
-	card_hands_player1.identifier = 0;
-	card_hands_player1.pair = -1;
-	card_hands_player1.two_pair = -1;
-	card_hands_player1.three_kinds = -1;
-	card_hands_player1.four_kinds = -1;
-	card_hands_player1.straight = -1;
-	card_hands_player1.flush = -1;
-	card_hands_player1.full_house = -1;
-	Card draw_card;
-	Hand card_hands_dealer;
-	card_hands_dealer.identifier = 1;
-	card_hands_dealer.pair = -1;
-	card_hands_dealer.two_pair = -1;
-	card_hands_dealer.three_kinds = -1;
-	card_hands_dealer.four_kinds = -1;
-	card_hands_dealer.straight = -1;
-	card_hands_dealer.flush = -1;
-	card_hands_dealer.full_house = -1;
+	
 	
 	int continue_playing = 2;
 	/* initalize deck array */
@@ -47,6 +29,26 @@ int main(void)
 		}
 	} while (continue_playing == 1);
 	while (continue_playing == 2) {
+		//initialization, very important
+		Hand card_hands_player1;
+		card_hands_player1.identifier = 0;
+		card_hands_player1.pair = -1;
+		card_hands_player1.two_pair = -1;
+		card_hands_player1.three_kinds = -1;
+		card_hands_player1.four_kinds = -1;
+		card_hands_player1.straight = -1;
+		card_hands_player1.flush = -1;
+		card_hands_player1.full_house = -1;
+		Card draw_card;
+		Hand card_hands_dealer;
+		card_hands_dealer.identifier = 1;
+		card_hands_dealer.pair = -1;
+		card_hands_dealer.two_pair = -1;
+		card_hands_dealer.three_kinds = -1;
+		card_hands_dealer.four_kinds = -1;
+		card_hands_dealer.straight = -1;
+		card_hands_dealer.flush = -1;
+		card_hands_dealer.full_house = -1;
 
 
 
@@ -70,6 +72,10 @@ int main(void)
 		getchar();
 
 		fgets(yes_or_no, MAX, stdin);
+		while (yes_or_no[0] != 'y' && yes_or_no[0] != 'n') {
+			printf("Please enter something that is correct the given input was not correct!");
+			fgets(yes_or_no, MAX, stdin);
+		}
 
 		if (yes_or_no[0] == 'y' || yes_or_no[0] == 'Y') {
 			printf("How many cards would you like to draw? Enter a number from 1 to 3?\n");
@@ -89,7 +95,7 @@ int main(void)
 
 			for (int j = 0; j < (number_of_redraw * 2) - 1; j += 2) {
 
-				while (!(isdigit(user_input[j])) || (strlen(user_input) > 2 && !((user_input[j + 1] == ' ') || (user_input[j + 1] == '\n')))) {
+				while ((!(isdigit(user_input[j]))) || (((user_input[j + 1] != ' ') && (user_input[j + 1] != '\n')))) {
 					printf("The input you have entered is not in a correct format please reenter using a proper format!");
 					fgets(user_input, MAX, stdin);
 
@@ -120,7 +126,7 @@ int main(void)
 		dealer_score = play(&card_hands_dealer);
 
 		if (player1_score > dealer_score)printf("Player1 has won this round. Congratulations\n");
-		if (player1_score < dealer_score)printf("The Dealer has won this round. Good job, computer\n");
+		else if (player1_score < dealer_score)printf("The Dealer has won this round. Good job, computer\n");
 		else printf("Time for a showdown! Since neither has won.\n");
 
 		
