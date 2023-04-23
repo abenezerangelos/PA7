@@ -1,4 +1,12 @@
 #pragma once
+/*
+Author:Ebenezer Abate
+Course: CPT_S Lab secion 07
+TA: Selina N.
+Date: 04/21/23
+
+Description: This is the header file(.h) that contains all the constants and any other defintions we need for both the main.c
+and functions.c files to work properly*/
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>

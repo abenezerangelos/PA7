@@ -2,7 +2,18 @@
 //1. Please finish the showdown functionality by sending the two pointers of the player hands--alloted time: 30 minutes/one cycle
 //   -- create a point system to see who wins i.e., every type will have a point based on the the order 
 //			- if both have the same point then possibly make a showdown happen that is shuffle then deal by letting the players now and so you wouldn't tell them who won but instead suggest for them to play again
+// 
+// 
 //2. Please finish the random generator of the dealer hand drawing mechanism--alloted time: 45 minutes/one and a half cycle
+/*
+Author:Ebenezer Abate
+Course: CPT_S Lab secion 07
+TA: Selina N.
+Date: 04/12/23
+
+Description:
+This is the main.c file which consists of all the I/0 function calls i.e., printf() and scanf() we will also have all the function calls
+for the function declarations in battleship.c.*/
 int main(void)
 {	
 	/* initialize suit array */
@@ -90,7 +101,7 @@ int main(void)
 
 			fgets(number_of_redraw, MAX, stdin);
 			int draw_number = number_of_redraw[0] - '0';
-			printf("What is going on:-%s- and a character: -%c-", number_of_redraw, number_of_redraw[0]);
+			/*printf("What is going on:-%s- and a character: -%c-", number_of_redraw, number_of_redraw[0]);*/
 			while (draw_number< 1 || draw_number>3) {
 				printf("Please only enter values from 1 to 3 including 1 and 3! Try again\n");
 				fgets(number_of_redraw, MAX, stdin);
@@ -105,10 +116,10 @@ int main(void)
 			//debugging
 
 			for (int j = 0; j < ( draw_number* 2) - 1; j += 2) {
-				printf("value: %d, truth value: %d", user_input[j], user_input <= 0);
+				/*printf("value: %d, truth value: %d", user_input[j], user_input <= 0);*/
 				int temp_int = user_input[j] - '0';
 				while ((!(isdigit(user_input[j]))) ||(temp_int<=0)|| (((user_input[j + 1] != ' ') && (user_input[j + 1] != '\n')))) {
-					printf("DEBUG: -%c-", user_input[j + 1]);
+					/*printf("DEBUG: -%c-", user_input[j + 1]);*/
 					printf("The input you have entered is not in a correct format please reenter using a proper format!");
 					fgets(user_input, 9, stdin);
 					temp_int = user_input[j] - '0';
@@ -131,9 +142,7 @@ int main(void)
 
 		}
 		//print all the updated values of the card struct using a loop
-		for (int i = 0; i < 5; i++) {
-			printf("\nCards:%s of %s, \n", face[card_hands_player1.cards[i].face_index], suit[card_hands_player1.cards[i].suit_index]);
-		}
+		
 		
 		int player1_score;
 		int dealer_score;

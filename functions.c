@@ -1,16 +1,15 @@
 #include "Header.h"
-//(2) (15 pts) Simulate the dealer.The dealer's five-card hand is dealt "face
-//down" so the player cannot see it. The program should then evaluate the
-//dealer's hand, and based on the quality of the hand, the dealer should draw
-//one, two, or three more cards to replace the corresponding number of
-//unneeded cards in the original hand.The program should then re - evaluate
-//the dealer's hand.
-//(3) (15 pts) Make the program handle the dealer's five-card hand
-//automatically.The player should be allowed to decide which cards of the
-//player's hand to replace. The player can replace up to three cards. The
-//program should then evaluate both hands and determine who wins.The
-//game should be played until the user wants to exit.
+/*
+Author:Ebenezer Abate
+Course: CPT_S Lab secion 07
+TA: Selina N.
+Date: 04/21/23
 
+Description:
+This is the other .c file that contains the necessary functions that will be called in the main.c function.
+This file consists of all the declaration.
+It also contains necessary functions to print the welcome screen as well as initializing struct values.
+*/
 //This ^^^^^^^^^^^ is the hardest part of the PA. 
 /* shuffle cards in deck */
 
@@ -58,7 +57,7 @@ void draw(const int wDeck[][13], const char* wFace[], const char* wSuit[],Card* 
 				{
 					draw_card->face_index = column;
 					draw_card->suit_index = row;
-					printf("Drawer: %s of %s%c", wFace[column], wSuit[row], card % 2 == 0 ? '\n' : '\t');
+					
 				}
 			}
 		}
@@ -229,16 +228,16 @@ void contains_two_pairs(Hand* card_hands) {
 	
 	for (int j = 0; j < 4; j++) {
 		for (i = j + 1; i < 5; i++) {
-			printf("Change: %d for two pairs player%d\n", card_hands->two_pair, card_hands->identifier + 1);
+			/*printf("Change: %d for two pairs player%d\n", card_hands->two_pair, card_hands->identifier + 1);*/
 			if ((card_hands->cards[j].face_index == card_hands->cards[i].face_index)) {
 				save_combo[j] = card_hands->cards[i].face_index;
 			}
 		}
 	}
 	int size = sizeof(save_combo) / 4;
-	printf("[");
+	
 	for (int iter = 0; iter <size-1 ; iter++) {
-		printf("%d, ", save_combo[iter]);
+		
 		for (iterator = iter + 1; iterator < size; iterator++) {
 			if (save_combo[iter] != -1&&save_combo[iterator]!=-1) {
 				if (save_combo[iter] == save_combo[iterator])card_hands->two_pair = 0;
@@ -246,7 +245,7 @@ void contains_two_pairs(Hand* card_hands) {
 			}
 		}
 	}
-	printf("]\n");
+	
 }
 void contains_three_of_a_kind(Hand* card_hands) {
 	int i;
@@ -386,7 +385,7 @@ void contains_straight(Hand* card_hands) {
 			
 		}
 		else card_hands->straight = 0;
-		printf("Debugger for player%d:%d\n", card_hands->identifier + 1, card_hands->straight);
+		
 	}
 	
 	if (card_hands->straight == 1) {
@@ -409,8 +408,8 @@ void print_rule(void) {
 		"A second \"after the draw\" betting round occurs beginning with the player to the dealer's left or else beginning with the player who opened the first round (the latter is common when antes are used instead of blinds). This is followed by a showdown, if more than one player remains, in which the player with the best hand wins the pot.\n");
 }
 void display_continue(void) {
-	printf("1. Enter '1' to exit the game.\n"
-		"2. Enter '2' to continue playing.\n");
+	printf("\n1. Enter '1' to exit the game.\n"
+		"\n2. Enter '2' to continue playing.\n");
 }
 int play(Hand* card_hands) {
 	int total_score = 0;
@@ -425,7 +424,7 @@ int play(Hand* card_hands) {
 	for (int i = 0; i < sizeof(points_array) / 4; i++) {
 		if (points_array[i] == 1) {
 			total_score += (i + 1);
-			printf("Points for player%d: %d and which one it is: %s, truthvalue:%d\n", card_hands->identifier + 1, i+1,rep[i],card_hands->pair);
+			printf("Points for player%d: %d and which one it is: %s\n", card_hands->identifier + 1, i+1,rep[i]);
 		}
 	}
 	printf("Total for player%d: %d\n", card_hands->identifier + 1, total_score);
