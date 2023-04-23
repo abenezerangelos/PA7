@@ -46,3 +46,4 @@ void print_rule();
 void display_continue();
 int play(Hand* card_hands);
 void sort(Hand* card_hands);
+void draw_for_dealer(const int wDeck[][13], const char* wFace[], const char* wSuit[],Hand* card_hands);

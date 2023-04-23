@@ -63,6 +63,27 @@ void draw(const int wDeck[][13], const char* wFace[], const char* wSuit[],Card* 
 		}
 	
 }
+void draw_for_dealer(const int wDeck[][13], const char* wFace[], const char* wSuit[], Hand* card_hands) {
+	int draw_or_not;
+	draw_or_not = rand() % 2;
+	int how_many_times, rand_num;
+	int random_choices[5] = { 0 };
+
+	if (draw_or_not) {
+		printf("\nDEALER HAS DECIDED TO REDRAW FOR BETTER CARDS!\n");
+		how_many_times = (rand() % 3) + 1;
+		for (int i = 0; i < how_many_times; i++) {
+			rand_num = (rand() % 5) + 1;
+			for (int i = 0; i < sizeof(random_choices) / 4; i++) {
+				while (rand_num == random_choices[i]) {
+					rand_num = (rand() % 5) + 1;
+				}
+			}
+			draw(wDeck, wFace, wSuit, &card_hands->cards[rand_num - 1]);
+
+		}
+	}
+}
 /* deal cards in deck */
 //modifying it to deal only 5 cards
 void deal(const int wDeck[][13], const char* wFace[], const char* wSuit[],Hand* card_hands)

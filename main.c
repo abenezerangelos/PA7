@@ -5,6 +5,19 @@
 // 
 // 
 //2. Please finish the random generator of the dealer hand drawing mechanism--alloted time: 45 minutes/one and a half cycle
+			//--kind of implementation - using 
+/*
+	int is_sequential;
+	for (int i = 0;i<4;i++){
+		for (j=i+1;j<5;j++){
+
+			if (there_is_any_consequent_pairs) is_sequential=True;
+			}
+			}
+
+
+
+*/
 /*
 Author:Ebenezer Abate
 Course: CPT_S Lab secion 07
@@ -141,6 +154,7 @@ int main(void)
 
 
 		}
+		draw_for_dealer(deck,face,suit,&card_hands_dealer);
 		//print all the updated values of the card struct using a loop
 		
 		
