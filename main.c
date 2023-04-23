@@ -18,7 +18,8 @@ int main(void)
 	/* initalize deck array */
 
 	int deck[4][13] = { 0 };
-
+	int rounds = 0;
+	int collected = 0;
 	srand((unsigned)time(NULL)); /* seed random-number generator */
 	do {
 		display_menu();
@@ -28,6 +29,7 @@ int main(void)
 			print_rule();
 		}
 	} while (continue_playing == 1);
+	
 	while (continue_playing == 2) {
 		//initialization, very important
 		Hand card_hands_player1;
@@ -51,7 +53,6 @@ int main(void)
 		card_hands_dealer.full_house = -1;
 
 
-
 		printf("Player's cards: \n");
 		shuffle(deck);
 		//deal to user player
@@ -65,13 +66,20 @@ int main(void)
 
 		deal(deck, face, suit, &card_hands_dealer);
 
-
+		
+		
 		printf("\nWould you like to draw cards. Please enter 'y' or 'n'.\n");
-		char yes_or_no[MAX];
-		int number_of_redraw = 0;
-		getchar();
+	
 
+		char yes_or_no[MAX];
+
+		char number_of_redraw[MAX];
+		if (!collected)collected=getchar();
 		fgets(yes_or_no, MAX, stdin);
+		
+
+		/*for (int i = 0; i < (int)strlen(yes_or_no); i++)printf("\nStrings:-%c-\n", yes_or_no[i]);*/
+		
 		while (yes_or_no[0] != 'y' && yes_or_no[0] != 'n') {
 			printf("Please enter something that is correct the given input was not correct!");
 			fgets(yes_or_no, MAX, stdin);
@@ -80,33 +88,40 @@ int main(void)
 		if (yes_or_no[0] == 'y' || yes_or_no[0] == 'Y') {
 			printf("How many cards would you like to draw? Enter a number from 1 to 3?\n");
 
-			scanf("%d", &number_of_redraw);
-			while (number_of_redraw < 1 || number_of_redraw>3) {
+			fgets(number_of_redraw, MAX, stdin);
+			int draw_number = number_of_redraw[0] - '0';
+			printf("What is going on:-%s- and a character: -%c-", number_of_redraw, number_of_redraw[0]);
+			while (draw_number< 1 || draw_number>3) {
 				printf("Please only enter values from 1 to 3 including 1 and 3! Try again\n");
-				scanf("%d", &number_of_redraw);
+				fgets(number_of_redraw, MAX, stdin);
+				draw_number = number_of_redraw[0] - '0';
 			}
 
 			printf("Which cards do you want to replace? Please enter the index? from 1 to 5 including 1 and 5: and enter by separating using space\n");
 			char user_input[9] = { '0' };
-			getchar();
-			fgets(user_input, MAX, stdin);
-			system("clear||cls");
+			
+			fgets(user_input, 9, stdin);
+			/*system("clear||cls");*/
 			//debugging
 
-			for (int j = 0; j < (number_of_redraw * 2) - 1; j += 2) {
-
-				while ((!(isdigit(user_input[j]))) || (((user_input[j + 1] != ' ') && (user_input[j + 1] != '\n')))) {
+			for (int j = 0; j < ( draw_number* 2) - 1; j += 2) {
+				printf("value: %d, truth value: %d", user_input[j], user_input <= 0);
+				int temp_int = user_input[j] - '0';
+				while ((!(isdigit(user_input[j]))) ||(temp_int<=0)|| (((user_input[j + 1] != ' ') && (user_input[j + 1] != '\n')))) {
+					printf("DEBUG: -%c-", user_input[j + 1]);
 					printf("The input you have entered is not in a correct format please reenter using a proper format!");
-					fgets(user_input, MAX, stdin);
+					fgets(user_input, 9, stdin);
+					temp_int = user_input[j] - '0';
 
 
 				}
 
 			}
-			for (int i = 0; i < (number_of_redraw * 2) - 1; i++) {
+			for (int i = 0; i < (draw_number * 2) - 1; i++) {
 
 				if ((i % 2) == 0) {
-					int entry = user_input[i] - '0';
+					int temp = user_input[i] - '0';
+					int entry = temp - 1;
 					draw(deck, face, suit, &draw_card);
 					card_hands_player1.cards[entry - 1] = draw_card;
 				}
@@ -122,31 +137,49 @@ int main(void)
 		
 		int player1_score;
 		int dealer_score;
+		int showdown=0;
 		player1_score =play(&card_hands_player1);
 		dealer_score = play(&card_hands_dealer);
 
-		if (player1_score > dealer_score)printf("Player1 has won this round. Congratulations\n");
-		else if (player1_score < dealer_score)printf("The Dealer has won this round. Good job, computer\n");
-		else printf("Time for a showdown! Since neither has won.\n");
+		if (player1_score > dealer_score)printf("\nPLAYER1 HAS WON THIS ROUND. CONGRATULATIONS\n");
+		else if (player1_score < dealer_score)printf("\nTHE DEALER HAS WON THIS ROUND. GOOD JOB, COMPUTER\n");
+		else {
+			printf("\nTIME FOR A SHOWDOWN! SINCE NO ONE HAS WON.\n");
+			showdown = 1;
+			
+		}
 
 		
 		
-		printf("Player1\n");
+		printf("\nPlayer1\n");
 		for (int i = 0; i < 5; i++) {
 			printf("%5s of %-8s%c", face[card_hands_player1.cards[i].face_index], suit[card_hands_player1.cards[i].suit_index], i % 2 == 0 ? '\n' : '\t');
 		}
 		printf("\n");
-		printf("Player2\n");
+		printf("\nPlayer2\n");
 		for (int i = 0; i < 5; i++) {
 			printf("%5s of %-8s%c", face[card_hands_dealer.cards[i].face_index], suit[card_hands_dealer.cards[i].suit_index], i % 2 == 0 ? '\n' : '\t');
 		}
 
+		if (!showdown) {
+			char temporary[MAX];
+			display_continue();
+			fgets(temporary, MAX, stdin);
+			while (!isdigit(temporary[0])||!(temporary[0]-'0'>0 && temporary[0]-'0'<3)) {
+				printf("Please enter something proper");
+				fgets(temporary, MAX, stdin);
+			}
+			continue_playing = temporary[0] - '0';
 
-		display_continue();
-		scanf("%d", &continue_playing);
+			
+			
+		}
+		if (showdown) {
+			system("pause");
+		}
 		system("clear||cls");
-
-
+		rounds++;
+		
 	}
 
 		return 0;
